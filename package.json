@@ -1,0 +1,16 @@
+{
+  "name": "terpn-app",
+  "version": "1.8.0-private-beta-handoff",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "serve": "python3 -m http.server 4173",
+    "check": "node scripts/check.mjs && node scripts/a11y-check.mjs && node scripts/regression.mjs && node scripts/launch-check.mjs && node scripts/deployment-check.mjs && node scripts/beta-readiness.mjs && node scripts/ui-wiring-check.mjs",
+    "backend:example": "node backend/example-node-server.mjs",
+    "launch:check": "node scripts/launch-check.mjs",
+    "deploy:check": "node scripts/deployment-check.mjs",
+    "beta:check": "node scripts/beta-readiness.mjs",
+    "browser:qa": "node scripts/browser-qa.mjs",
+    "private-beta:check": "npm run check && npm run browser:qa"
+  }
+}

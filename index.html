@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TERPN — Terpene Explorer</title>
+  <meta name="description" content="A local-first TERPN prototype for terpene discovery, onboarding, journaling, pricing interest, and backend/account readiness." />
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#top">Skip to app</a>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="#top" aria-label="TERPN home"><span class="brand-mark">T</span><span>TERPN</span></a>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a href="#explore">Explore</a>
+        <a href="#onboarding">Onboarding</a>
+        <a href="#journal">Journal</a>
+        <a href="#trust">Trust</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#backend">Accounts</a>
+        <button class="pill-btn" type="button" data-tab-target="signup">Join Waitlist</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="shell hero" aria-labelledby="hero-title">
+      <div class="hero-card hero-main">
+        <div>
+          <div class="eyebrow">Local-first terpene intelligence prototype</div>
+          <h1 id="hero-title">Discover your terpene pattern.</h1>
+          <p class="hero-copy">TERPN helps people explore terpene profiles, save preferences, journal experiences, and understand wellness patterns without making medical claims. This release-candidate checkpoint includes trust content, guided onboarding, richer journaling, deployment-safe defaults, pricing interest, and backend/account readiness screens.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="#onboarding">Start guided setup</a>
+            <a class="secondary-btn" href="#journal">Add journal entry</a>
+            <button class="ghost-btn" type="button" id="exportAllBtn">Export local data</button>
+          </div>
+          <div class="tagrow" aria-label="Current build additions">
+            <span class="tag good">Trust copy</span>
+            <span class="tag good">Onboarding</span>
+            <span class="tag good">Journal v2</span>
+            <span class="tag good">Pricing interest</span>
+            <span class="tag good">Account model</span>
+            <span class="tag gold" id="betaVersionLabel">v1.8.0-private-beta-handoff</span>
+          </div>
+        </div>
+        <div class="status-grid" aria-label="Prototype status">
+          <div class="status-card"><strong id="savedCount">0</strong><span>Saved journal entries</span></div>
+          <div class="status-card"><strong id="accountStatus">Local</strong><span>Account mode</span></div>
+          <div class="status-card"><strong id="onboardStatus">0%</strong><span>Onboarding complete</span></div>
+        </div>
+      </div>
+
+      <aside class="glass-card hero-side" aria-label="Terpene profile preview">
+        <div class="profile-ring">
+          <div>
+            <div class="eyebrow">Starter profile</div>
+            <h2 style="margin-bottom:.35rem">Calm Focus</h2>
+            <p class="small">A balanced educational profile focused on gentle aroma notes, personal tracking, and mindful reflection.</p>
+          </div>
+          <div class="terpene-wheel" aria-label="Sample terpene mix">
+            <span class="wheel-chip">Linalool</span>
+            <span class="wheel-chip">Pinene</span>
+            <span class="wheel-chip">Limonene</span>
+            <span class="wheel-chip">Myrcene</span>
+            <span class="wheel-chip">Caryophyllene</span>
+            <span class="wheel-chip">Humulene</span>
+          </div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <h3>Safety posture</h3>
+            <p class="small">Education-first. No medical promises, no dose instructions, no purchasing flow.</p>
+          </div>
+          <div class="card">
+            <h3>Data posture</h3>
+            <p class="small">All demo entries stay in this browser unless exported by the user.</p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="explore" class="shell section" aria-labelledby="explore-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Explorer</div>
+          <h2 id="explore-title">Terpene library with clear, non-medical content.</h2>
+          <p>Search by name, aroma, or mood-adjacent descriptor. Copy is written as educational context, not health advice.</p>
+        </div>
+      </div>
+      <div class="controls" role="search">
+        <input id="terpeneSearch" type="search" placeholder="Search terpenes, aromas, or notes..." aria-label="Search terpene library" />
+        <select id="terpeneFilter" aria-label="Filter terpene category">
+          <option value="all">All categories</option>
+          <option value="calm">Calm leaning</option>
+          <option value="bright">Bright leaning</option>
+          <option value="earthy">Earthy/spice</option>
+          <option value="focus">Focus leaning</option>
+        </select>
+      </div>
+      <div id="terpeneList" class="terpene-list" aria-live="polite"></div>
+    </section>
+
+    <section id="onboarding" class="shell section" aria-labelledby="onboarding-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Onboarding</div>
+          <h2 id="onboarding-title">Guided setup that turns curiosity into a safe profile.</h2>
+          <p>Collect high-level preferences, build a starter profile, and route the user into journaling without implying clinical outcomes.</p>
+        </div>
+        <button class="secondary-btn" type="button" id="resetOnboardingBtn">Reset onboarding</button>
+      </div>
+
+      <div class="journey-steps" aria-label="Onboarding steps">
+        <div class="card step-card active" data-step-card="1"><div class="step-num">1</div><h3>Intent</h3><p class="small">Pick what you want to learn.</p></div>
+        <div class="card step-card" data-step-card="2"><div class="step-num">2</div><h3>Preferences</h3><p class="small">Choose aromas and sensitivities.</p></div>
+        <div class="card step-card" data-step-card="3"><div class="step-num">3</div><h3>Trust</h3><p class="small">Review safe-use boundaries.</p></div>
+        <div class="card step-card" data-step-card="4"><div class="step-num">4</div><h3>Starter profile</h3><p class="small">Save your first TERPN path.</p></div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:1rem">
+        <form class="card highlight" id="onboardingForm">
+          <div class="field-grid">
+            <div>
+              <label for="onboardName">Display name</label>
+              <input id="onboardName" name="name" placeholder="Chef Renee" autocomplete="name" />
+            </div>
+            <div>
+              <label for="onboardGoal">Primary goal</label>
+              <select id="onboardGoal" name="goal">
+                <option value="learn">Learn terpene basics</option>
+                <option value="journal">Track personal patterns</option>
+                <option value="pairing">Explore flavor and aroma pairing</option>
+                <option value="mindful">Build mindful reflection habits</option>
+              </select>
+            </div>
+            <div>
+              <label for="onboardAroma">Favorite aroma lane</label>
+              <select id="onboardAroma" name="aroma">
+                <option value="citrus">Citrus and bright</option>
+                <option value="floral">Floral and soft</option>
+                <option value="forest">Forest and herbal</option>
+                <option value="spice">Spice and earth</option>
+              </select>
+            </div>
+            <div>
+              <label for="onboardSensitivity">Sensitivity note</label>
+              <select id="onboardSensitivity" name="sensitivity">
+                <option value="standard">No special note</option>
+                <option value="low-aroma">Prefer low-aroma profiles</option>
+                <option value="avoid-heavy">Avoid heavy/sedating descriptors</option>
+                <option value="avoid-bright">Avoid very bright/stimulating descriptors</option>
+              </select>
+            </div>
+            <div class="wide">
+              <label for="onboardNotes">Personal note</label>
+              <textarea id="onboardNotes" name="notes" placeholder="I want a simple way to compare aroma, mood, and experience notes over time."></textarea>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <button class="primary-btn" type="submit">Save onboarding profile</button>
+            <button class="ghost-btn" type="button" id="generateStarterBtn">Generate starter path</button>
+          </div>
+        </form>
+
+        <div class="card" aria-label="Starter path preview">
+          <h3>Starter path preview</h3>
+          <p class="small" id="starterSummary">Complete onboarding to generate a starter path.</p>
+          <div class="tagrow" id="starterTags"></div>
+          <div class="checklist" id="onboardingChecklist"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="journal" class="shell section" aria-labelledby="journal-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Journal v2</div>
+          <h2 id="journal-title">A richer private log for patterns, reflections, and exports.</h2>
+          <p>Entries save locally. The journal now includes terpene selections, aroma notes, mood before/after, setting, reflections, filters, and JSON export/import.</p>
+        </div>
+        <div class="hero-actions" style="margin:0">
+          <button class="secondary-btn" type="button" id="exportJournalBtn">Export journal</button>
+          <button class="secondary-btn" type="button" id="importJournalBtn">Import journal</button>
+          <button class="danger-btn" type="button" id="clearJournalBtn">Clear journal</button>
+          <input id="journalImportInput" type="file" accept="application/json,.json" hidden aria-label="Import journal JSON file" />
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <form class="card highlight" id="journalForm">
+          <div class="entry-meta"><span id="journalFormMode">New entry</span><span id="insightPatternStatusInline">Pending</span></div>
+          <div class="field-grid">
+            <div>
+              <label for="entryTitle">Entry title</label>
+              <input id="entryTitle" name="title" placeholder="Evening aroma reflection" required />
+            </div>
+            <div>
+              <label for="entryDate">Date</label>
+              <input id="entryDate" name="date" type="date" required />
+            </div>
+            <div>
+              <label for="entryTerpenes">Terpenes noticed</label>
+              <input id="entryTerpenes" name="terpenes" placeholder="Linalool, pinene, limonene" />
+            </div>
+            <div>
+              <label for="entrySetting">Setting</label>
+              <select id="entrySetting" name="setting">
+                <option>Home reflection</option>
+                <option>Cooking / pairing</option>
+                <option>Outdoor walk</option>
+                <option>Creative session</option>
+                <option>Quiet evening</option>
+              </select>
+            </div>
+            <div>
+              <label for="entryBefore">Mood before</label>
+              <select id="entryBefore" name="before">
+                <option>Curious</option>
+                <option>Calm</option>
+                <option>Scattered</option>
+                <option>Tired</option>
+                <option>Bright</option>
+              </select>
+            </div>
+            <div>
+              <label for="entryAfter">Mood after</label>
+              <select id="entryAfter" name="after">
+                <option>Grounded</option>
+                <option>Clear</option>
+                <option>Relaxed</option>
+                <option>Neutral</option>
+                <option>Inspired</option>
+              </select>
+            </div>
+            <div class="wide">
+              <label for="entryNotes">Reflection</label>
+              <textarea id="entryNotes" name="notes" placeholder="What did you notice about aroma, context, and your own experience?" required></textarea>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <button class="primary-btn" type="submit" id="journalSubmitBtn">Save journal entry</button>
+            <button class="ghost-btn" type="button" id="loadSampleEntryBtn">Load sample</button>
+            <button class="ghost-btn" type="button" id="cancelJournalEditBtn" hidden>Cancel edit</button>
+          </div>
+        </form>
+
+        <div class="card">
+          <div class="controls">
+            <input id="journalSearch" type="search" placeholder="Filter journal entries..." aria-label="Filter journal entries" />
+            <select id="journalMoodFilter" aria-label="Filter by mood after">
+              <option value="all">All outcomes</option>
+              <option>Grounded</option>
+              <option>Clear</option>
+              <option>Relaxed</option>
+              <option>Neutral</option>
+              <option>Inspired</option>
+            </select>
+          </div>
+          <div class="grid grid-3 compact-status journal-insights" aria-label="Journal insights">
+            <div class="status-card"><strong id="insightEntryCount">0</strong><span>Entries</span></div>
+            <div class="status-card"><strong id="insightLatestDate">None</strong><span>Latest entry</span></div>
+            <div class="status-card"><strong id="insightPatternStatus">Pending</strong><span>Pattern status</span></div>
+          </div>
+          <div class="tagrow" id="insightTerpenes" aria-label="Top terpene notes"></div>
+          <div class="tagrow" id="insightMoods" aria-label="Top reflection notes"></div>
+          <div class="tagrow" id="insightSettings" aria-label="Top settings"></div>
+          <div id="entryList" class="entry-list" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="trust" class="shell section" aria-labelledby="trust-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Trust and content</div>
+          <h2 id="trust-title">A safer content framework before launch.</h2>
+          <p>TERPN should be trustworthy before it is persuasive. This block makes responsible-use language visible and keeps claims within educational boundaries.</p>
+        </div>
+      </div>
+      <div class="grid grid-3">
+        <div class="card highlight">
+          <h3>Educational only</h3>
+          <p class="small">Content explains aroma families and user-reported patterns. It does not diagnose, treat, or recommend any product as a medical intervention.</p>
+          <div class="tagrow"><span class="tag good">No medical claims</span><span class="tag good">Plain language</span></div>
+        </div>
+        <div class="card">
+          <h3>Local privacy</h3>
+          <p class="small">The prototype stores onboarding and journal data in local browser storage. Export/import is user-controlled.</p>
+          <div class="tagrow"><span class="tag gold">Local storage</span><span class="tag gold">Exportable JSON</span></div>
+        </div>
+        <div class="card">
+          <h3>Responsible boundaries</h3>
+          <p class="small">No sales, no billing flow, no dosing instructions, no age-gated commerce, and no external profile publishing in this checkpoint.</p>
+          <div class="tagrow"><span class="tag warn">No commerce</span><span class="tag warn">No dose advice</span></div>
+        </div>
+      </div>
+      <div class="grid grid-2" style="margin-top:1rem">
+        <div class="card">
+          <h3>Content review checklist</h3>
+          <div class="checklist">
+            <label class="check-item"><input type="checkbox" checked /> <span>Use “may be associated with” instead of outcome promises.</span></label>
+            <label class="check-item"><input type="checkbox" checked /> <span>Separate aroma/flavor descriptions from personal wellness reflections.</span></label>
+            <label class="check-item"><input type="checkbox" checked /> <span>Add a clear reminder to consult qualified professionals for health decisions.</span></label>
+            <label class="check-item"><input type="checkbox" checked /> <span>Avoid purchase, potency, dosage, or treatment guidance.</span></label>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Visible disclaimer</h3>
+          <p class="small">TERPN is an educational and journaling tool. It is not medical advice, legal advice, or a cannabis marketplace. Laws and personal risk vary by location and individual circumstances. Use trusted professionals for health, legal, or safety decisions.</p>
+          <p class="tiny">This disclaimer should remain visible in onboarding, journal export, and future account creation screens.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="shell section" aria-labelledby="pricing-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Pricing and signup</div>
+          <h2 id="pricing-title">Interest capture without real billing.</h2>
+          <p>The prototype now shows a clean pricing/sign-up lane while avoiding real billing or live membership activation.</p>
+        </div>
+      </div>
+      <div class="tabbar" role="tablist" aria-label="Pricing tabs">
+        <button class="tab-btn active" id="plans-tab" role="tab" aria-selected="true" aria-controls="plans-panel" tabindex="0" data-tab="plans" type="button">Plans</button>
+        <button class="tab-btn" id="signup-tab" role="tab" aria-selected="false" aria-controls="signup-panel" tabindex="-1" data-tab="signup" type="button">Signup</button>
+      </div>
+      <div class="panel active" id="plans-panel" role="tabpanel" aria-labelledby="plans-tab" tabindex="0" data-panel="plans">
+        <div class="grid grid-3">
+          <div class="card pricing-card">
+            <div>
+              <h3>Starter</h3>
+              <p class="small">For learning terpene basics and trying the private journal.</p>
+              <div class="price">Free <span>/ prototype</span></div>
+              <ul class="feature-list">
+                <li>Terpene library</li>
+                <li>Local journal entries</li>
+                <li>Basic onboarding profile</li>
+              </ul>
+            </div>
+            <button class="secondary-btn" type="button" data-plan="Starter">Choose Starter</button>
+          </div>
+          <div class="card pricing-card highlight">
+            <div>
+              <h3>Explorer</h3>
+              <p class="small">For pattern tracking, saved profiles, and richer exports.</p>
+              <div class="price">$9 <span>/ interest only</span></div>
+              <ul class="feature-list">
+                <li>Unlimited local journal entries</li>
+                <li>Saved terpene paths</li>
+                <li>Export/import tools</li>
+              </ul>
+            </div>
+            <button class="primary-btn" type="button" data-plan="Explorer">Join Explorer list</button>
+          </div>
+          <div class="card pricing-card">
+            <div>
+              <h3>Studio</h3>
+              <p class="small">For culinary, wellness, and education teams testing TERPN workflows.</p>
+              <div class="price">Custom <span>/ interest only</span></div>
+              <ul class="feature-list">
+                <li>Team profile concepts</li>
+                <li>Content review workflow</li>
+                <li>Backend handoff planning</li>
+              </ul>
+            </div>
+            <button class="secondary-btn" type="button" data-plan="Studio">Join Studio list</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel" id="signup-panel" role="tabpanel" aria-labelledby="signup-tab" tabindex="0" data-panel="signup" hidden>
+        <div class="grid grid-2">
+          <form class="card highlight" id="signupForm">
+            <div class="field-grid">
+              <div>
+                <label for="signupName">Name</label>
+                <input id="signupName" name="name" autocomplete="name" placeholder="Chef Renee" required />
+              </div>
+              <div>
+                <label for="signupEmail">Email</label>
+                <input id="signupEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+              </div>
+              <div>
+                <label for="signupPlan">Plan interest</label>
+                <select id="signupPlan" name="plan">
+                  <option>Starter</option>
+                  <option>Explorer</option>
+                  <option>Studio</option>
+                </select>
+              </div>
+              <div>
+                <label for="signupRole">Use case</label>
+                <select id="signupRole" name="role">
+                  <option>Personal journal</option>
+                  <option>Culinary pairing</option>
+                  <option>Wellness education</option>
+                  <option>Content/admin review</option>
+                </select>
+              </div>
+              <div class="wide">
+                <label for="signupNote">What should TERPN help with?</label>
+                <textarea id="signupNote" name="note" placeholder="Tell us what would make TERPN useful for you."></textarea>
+              </div>
+            </div>
+            <div class="hero-actions">
+              <button class="primary-btn" type="submit">Save signup interest</button>
+            </div>
+          </form>
+          <div class="card">
+            <h3>Saved signup interest</h3>
+            <p class="small">This is a local demo list, not a real account or billing system.</p>
+            <div id="signupList" class="entry-list" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="backend" class="shell section" aria-labelledby="backend-title">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Backend, accounts, and beta readiness</div>
+          <h2 id="backend-title">Backend-ready without turning on a real backend.</h2>
+          <p>This beta checkpoint keeps local-first behavior as the default, with backend flags off by default. It gates backend reads, writes, auth/session checks, and retry queues behind feature flags.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-2">
+        <form class="card highlight" id="accountForm">
+          <h3>Local account mock</h3>
+          <p class="small">Use this to test account UI states before connecting authentication.</p>
+          <div class="field-grid">
+            <div>
+              <label for="accountName">Display name</label>
+              <input id="accountName" name="name" placeholder="Chef Renee" />
+            </div>
+            <div>
+              <label for="accountEmail">Email</label>
+              <input id="accountEmail" name="email" type="email" placeholder="you@example.com" />
+            </div>
+            <div>
+              <label for="accountRole">Role</label>
+              <select id="accountRole" name="role">
+                <option>Member</option>
+                <option>Creator</option>
+                <option>Reviewer</option>
+                <option>Admin</option>
+              </select>
+            </div>
+            <div>
+              <label for="accountPlan">Plan</label>
+              <select id="accountPlan" name="plan">
+                <option>Starter</option>
+                <option>Explorer</option>
+                <option>Studio</option>
+              </select>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <button class="primary-btn" type="submit">Save local account</button>
+            <button class="danger-btn" type="button" id="clearAccountBtn">Clear account</button>
+          </div>
+        </form>
+
+        <form class="card" id="backendFlagsForm">
+          <h3>Feature flags</h3>
+          <p class="small">Safe default is local-only. Save flags only when a backend endpoint is ready.</p>
+          <div class="field-grid">
+            <div class="wide">
+              <label for="flagBackendBaseUrl">Backend base URL</label>
+              <input id="flagBackendBaseUrl" name="backendBaseUrl" type="url" placeholder="https://api.example.com" />
+            </div>
+            <label class="toggle-row"><input id="flagUseBackend" type="checkbox" /> <span>Use backend adapter</span></label>
+            <label class="toggle-row"><input id="flagBackendRead" type="checkbox" /> <span>Enable backend reads</span></label>
+            <label class="toggle-row"><input id="flagBackendWrite" type="checkbox" /> <span>Enable backend writes</span></label>
+            <label class="toggle-row"><input id="flagMirrorWrites" type="checkbox" /> <span>Mirror backend data locally</span></label>
+            <label class="toggle-row"><input id="flagFallbackLocal" type="checkbox" /> <span>Fallback to local on backend error</span></label>
+            <label class="toggle-row"><input id="flagQueueWrites" type="checkbox" /> <span>Queue failed backend writes</span></label>
+            <label class="toggle-row"><input id="flagAuthSession" type="checkbox" /> <span>Enable auth/session checks</span></label>
+            <label class="toggle-row"><input id="flagSeedSample" type="checkbox" /> <span>Seed sample data</span></label>
+            <label class="toggle-row"><input id="flagDebugMode" type="checkbox" /> <span>Debug mode</span></label>
+          </div>
+          <div class="hero-actions">
+            <button class="primary-btn" type="submit">Save and apply flags</button>
+            <button class="secondary-btn" type="button" id="checkBackendBtn">Check /api/health</button>
+            <button class="danger-btn" type="button" id="resetFlagsBtn">Reset flags</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:1rem">
+        <div class="card standalone-status" id="backendHealthPanel">
+          <h3>Backend health</h3>
+          <p class="small"><strong id="backendHealthStatus">Not checked</strong></p>
+          <p class="tiny" id="backendHealthDetail">Use the backend flag panel to test /api/health before enabling remote reads or writes.</p>
+        </div>
+        <form class="card standalone-status" id="authSessionForm">
+          <h3>Auth/session</h3>
+          <p class="small" id="authSessionStatus"><strong id="sessionStatusLabel">Disabled</strong></p>
+          <p class="tiny" id="sessionStatusDetail">Enable auth/session only after /api/session is implemented.</p>
+          <label for="magicLinkEmail">Magic-link test email</label>
+          <input id="magicLinkEmail" type="email" placeholder="you@example.com" />
+          <div class="hero-actions">
+            <button class="secondary-btn" type="submit" id="checkSessionBtn">Check session</button>
+            <button class="ghost-btn" type="button" id="requestMagicLinkBtn">Request magic link</button>
+            <button class="danger-btn" type="button" id="signOutSessionBtn">Sign out</button>
+          </div>
+        </form>
+        <div class="card standalone-status">
+          <h3>Sync queue</h3>
+          <p class="small"><strong id="syncQueueStatus">Disabled</strong> · <span id="syncQueueCount">0</span> pending</p>
+          <p class="tiny">Latest: <span id="syncQueueLatest">None</span></p>
+          <p class="tiny" id="syncQueueDetail">Failed backend writes will appear here when queueing is enabled.</p>
+          <div class="hero-actions">
+            <button class="secondary-btn" type="button" id="flushSyncQueueBtn">Retry queue</button>
+            <button class="danger-btn" type="button" id="clearSyncQueueBtn">Clear queue</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:1rem">
+        <div class="card">
+          <h3>Data tools</h3>
+          <p class="small">Export and import are local, user-controlled, and schema-versioned.</p>
+          <p class="tiny">Schema: <code id="schemaVersionLabel">terpn.local.v2</code></p>
+          <div class="hero-actions">
+            <button class="secondary-btn" type="button" id="exportAllBackendBtn">Export all data</button>
+            <button class="secondary-btn" type="button" id="importAllBtn">Import all data</button>
+            <input id="allImportInput" type="file" accept="application/json,.json" hidden aria-label="Import full TERPN JSON file" />
+          </div>
+        </div>
+        <div class="card">
+          <h3>Local diagnostics</h3>
+          <p class="small"><strong id="diagnosticStatus">Not checked</strong></p>
+          <p class="tiny" id="diagnosticDetail">Run diagnostics before importing data, repairing local data, or connecting backend storage.</p>
+          <div class="hero-actions">
+            <button class="secondary-btn" type="button" id="runDiagnosticsBtn">Run diagnostics</button>
+            <button class="ghost-btn" type="button" id="exportDiagnosticsBtn">Export diagnostics</button>
+            <button class="danger-btn" type="button" id="repairLocalDataBtn">Repair local data</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Local backups</h3>
+          <p class="small"><strong id="backupStatus">None yet</strong></p>
+          <p class="tiny" id="backupDetail">Create a backup before destructive imports, repairs, clears, or backend testing.</p>
+          <div class="hero-actions">
+            <button class="secondary-btn" type="button" id="createBackupBtn">Create backup</button>
+            <button class="ghost-btn" type="button" id="exportBackupsBtn">Export backups</button>
+            <button class="secondary-btn" type="button" id="restoreBackupBtn">Restore latest</button>
+            <button class="danger-btn" type="button" id="clearBackupsBtn">Clear backups</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Storage keys</h3>
+          <p class="tiny"><code>terpn.profile.v1</code><br><code>terpn.journal.v1</code><br><code>terpn.signups.v1</code><br><code>terpn.account.v1</code><br><code>terpn.syncQueue.v1</code><br><code>terpn.flags.v1</code><br><code>terpn.backups.v1</code></p>
+          <p class="small">Adapter: <strong id="adapterModeLabel">Local storage</strong></p>
+        </div>
+        <div class="card">
+          <h3>Beta self-test</h3>
+          <p class="small"><strong id="qaSelfTestStatus">Not run</strong></p>
+          <p class="tiny" id="qaSelfTestDetail">Run this browser self-test before sharing a beta link.</p>
+          <div class="hero-actions">
+            <button class="secondary-btn" type="button" id="runSelfTestBtn">Run self-test</button>
+            <button class="ghost-btn" type="button" id="exportSelfTestBtn">Export self-test</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:1rem">
+        <div class="card">
+          <h3>Diagnostic issues</h3>
+          <div id="diagnosticIssues" class="entry-list" aria-live="polite"></div>
+        </div>
+        <div class="card">
+          <h3>Self-test results</h3>
+          <div id="qaSelfTestIssues" class="entry-list" aria-live="polite"></div>
+        </div>
+        <div class="card">
+          <h3>Beta gates</h3>
+          <div class="timeline">
+            <div class="timeline-item"><strong>Deploy static app</strong><p class="small">Use the deployment config with backend flags off by default.</p></div>
+            <div class="timeline-item"><strong>Browser QA</strong><p class="small">Test onboarding, journal create/edit/delete, backup/restore, import/export, diagnostics, and keyboard navigation.</p></div>
+            <div class="timeline-item"><strong>Backend pilot</strong><p class="small">Wire /api/health and /api/session first, then one remote resource path.</p></div>
+            <div class="timeline-item"><strong>Trust gates</strong><p class="small">Keep not medical advice, No dosing instructions, No commerce, and local browser storage language visible.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell footer-grid">
+      <div>
+        <div class="brand"><span class="brand-mark">T</span><span>TERPN</span></div>
+        <p class="small" style="margin-top:1rem">Current checkpoint: v1.8.0-private-beta-handoff with local-first data, safety backups, browser self-test, beta QA gates, deployment config, and backend/account readiness.</p>
+      </div>
+      <div class="card">
+        <strong>Prototype disclaimer</strong>
+        <p class="tiny" style="margin:.45rem 0 0">This is a local-first prototype. It is not medical advice, legal advice, a marketplace, or a production account system.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./assets/js/main.js"></script>
+</body>
+</html>

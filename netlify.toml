@@ -1,0 +1,21 @@
+[build]
+  publish = "."
+  command = "npm run check"
+
+[build.environment]
+  NODE_VERSION = "22"
+  TERPN_BACKEND_ENABLED = "false"
+  TERPN_AUTH_SESSION_ENABLED = "false"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    X-Frame-Options = "DENY"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

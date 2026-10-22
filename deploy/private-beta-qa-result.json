@@ -1,0 +1,30 @@
+{
+  "checkpoint": "v1.8.0-private-beta-handoff",
+  "generatedAt": "2026-05-15T16:28:00-10:00",
+  "deploymentStatus": "deployable private-beta artifact prepared; not published from this environment",
+  "deploymentLimitation": "No connected Netlify/Vercel deployment token or target project is available in this chat environment. Available GitHub repositories do not include a TERPN repository, so no repository deployment was attempted.",
+  "automatedChecks": {
+    "status": "passed",
+    "command": "npm run check",
+    "covered": [
+      "structural checks",
+      "accessibility checks",
+      "regression checks",
+      "launch-readiness checks",
+      "deployment checks",
+      "beta-readiness checks",
+      "UI wiring checks"
+    ]
+  },
+  "browserQa": {
+    "status": "blocked-in-environment",
+    "attemptedWith": "Chromium headless over local static server and file URL",
+    "blocker": "Chromium is managed by an administrator policy in this execution environment and blocks localhost/file URLs with ERR_BLOCKED_BY_ADMINISTRATOR.",
+    "honestResult": "Manual browser QA could not be completed here. Run npm run browser:qa on a local machine or run the included checklist against the deployed private beta URL."
+  },
+  "privateBetaReadiness": {
+    "backendDefault": "off/local-first",
+    "artifact": "terpn-private-beta-v1.8.0.zip",
+    "manualNextAction": "Upload the zip to Netlify Drop/Vercel or connect it to a TERPN-specific repository, then run browser QA against the deployed URL."
+  }
+}

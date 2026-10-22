@@ -1,0 +1,25 @@
+{
+  "name": "TERPN Private Beta",
+  "version": "1.8.0-private-beta-handoff",
+  "entry": "index.html",
+  "artifact": "terpn-private-beta-v1.8.0.zip",
+  "hostingTargets": ["Netlify static deploy", "Vercel static deploy", "any static HTTPS host"],
+  "backend": {
+    "default": "disabled",
+    "featureFlagStorageKey": "terpn.featureFlags.v1",
+    "requiredBeforeRemoteData": ["/api/health", "/api/session"]
+  },
+  "requiredQaAfterDeploy": [
+    "complete onboarding",
+    "create/edit/duplicate/delete journal entries",
+    "export/import journal data",
+    "export/import full data",
+    "create/restore backup",
+    "run diagnostics",
+    "run self-test",
+    "confirm backend flags are off by default",
+    "test mobile width",
+    "test keyboard tab flow"
+  ],
+  "notes": "Root _headers and _redirects are included for direct static upload compatibility. Public copies are also retained."
+}

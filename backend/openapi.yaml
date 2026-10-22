@@ -1,0 +1,338 @@
+openapi: 3.1.0
+info:
+  title: TERPN Prototype Backend Contract
+  version: 0.4.0
+  description: REST contract expected by the local-first TERPN static app adapters.
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/health:
+    get:
+      summary: Backend readiness check
+      responses:
+        '200':
+          description: Backend is reachable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /api/session:
+    get:
+      summary: Read current auth session
+      responses:
+        '200':
+          description: Session state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionEnvelope'
+        '404':
+          description: No active session
+    delete:
+      summary: Sign out current session
+      responses:
+        '204':
+          description: Session cleared
+  /api/auth/magic-link:
+    post:
+      summary: Request email magic link sign-in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                redirectTo:
+                  type: string
+      responses:
+        '200':
+          description: Request accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+  /api/profile:
+    get:
+      summary: Get current user profile
+      responses:
+        '200':
+          description: Profile object or null
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileEnvelope'
+        '404':
+          description: No profile yet
+    put:
+      summary: Replace current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+      responses:
+        '200':
+          description: Saved profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileEnvelope'
+    delete:
+      summary: Delete current user profile
+      responses:
+        '204':
+          description: Profile deleted
+  /api/journal:
+    get:
+      summary: List current user journal entries
+      responses:
+        '200':
+          description: Journal array
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEnvelope'
+    put:
+      summary: Replace current user journal array
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/JournalEntry'
+      responses:
+        '200':
+          description: Saved journal array
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEnvelope'
+    delete:
+      summary: Delete current user journal entries
+      responses:
+        '204':
+          description: Journal cleared
+  /api/signups:
+    get:
+      summary: List locally captured signup interests available to the current user/admin
+      responses:
+        '200':
+          description: Signup interest array
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupEnvelope'
+    put:
+      summary: Replace signup interest array for prototype compatibility
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SignupInterest'
+      responses:
+        '200':
+          description: Saved signup interest array
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupEnvelope'
+    delete:
+      summary: Delete local signup interests in prototype scope
+      responses:
+        '204':
+          description: Signup interests cleared
+  /api/account:
+    get:
+      summary: Get account display state for current session
+      responses:
+        '200':
+          description: Account state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountEnvelope'
+        '404':
+          description: No account state yet
+    put:
+      summary: Replace account display state for prototype compatibility
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        '200':
+          description: Saved account state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountEnvelope'
+    delete:
+      summary: Delete account display state in prototype scope
+      responses:
+        '204':
+          description: Account state cleared
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required: [ok]
+      properties:
+        ok:
+          type: boolean
+        version:
+          type: string
+        environment:
+          type: string
+    SessionEnvelope:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Session'
+    Session:
+      type: object
+      required: [authenticated]
+      properties:
+        authenticated:
+          type: boolean
+        user:
+          anyOf:
+            - $ref: '#/components/schemas/User'
+            - type: 'null'
+        roles:
+          type: array
+          items:
+            type: string
+        expiresAt:
+          type: string
+          format: date-time
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        plan:
+          type: string
+        role:
+          type: string
+    ProfileEnvelope:
+      type: object
+      properties:
+        data:
+          anyOf:
+            - $ref: '#/components/schemas/Profile'
+            - type: 'null'
+    Profile:
+      type: object
+      properties:
+        name:
+          type: string
+        goal:
+          type: string
+        aroma:
+          type: string
+        sensitivity:
+          type: string
+        notes:
+          type: string
+        updatedAt:
+          type: string
+    JournalEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/JournalEntry'
+    JournalEntry:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        title:
+          type: string
+        date:
+          type: string
+          format: date
+        terpenes:
+          type: string
+        setting:
+          type: string
+        before:
+          type: string
+        after:
+          type: string
+        notes:
+          type: string
+    SignupEnvelope:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SignupInterest'
+    SignupInterest:
+      type: object
+      required: [id, email]
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        plan:
+          type: string
+        role:
+          type: string
+        note:
+          type: string
+    AccountEnvelope:
+      type: object
+      properties:
+        data:
+          anyOf:
+            - $ref: '#/components/schemas/Account'
+            - type: 'null'
+    Account:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+        plan:
+          type: string
+        updatedAt:
+          type: string
